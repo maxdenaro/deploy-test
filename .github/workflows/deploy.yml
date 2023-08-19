@@ -10,8 +10,8 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy frontend
       - uses: actions/checkout@v2
+      - name: Deploy frontend
       # Add SSH key
       - run: mkdir "$HOME/.ssh"
       - run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key"
@@ -19,9 +19,9 @@ jobs:
       # Deploy
       - run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
     
+      - uses: appleboy/ssh-action@v1.0.0
       - name: Build frontend
-        uses: appleboy/ssh-action@v1.0.0
-        with:
+      - with:
           host: ${{ secrets.SSH_HOST }}
           username: deployer
           key: ${{ secrets.SSH_PRIVATE_KEY }}
