@@ -16,3 +16,4 @@ jobs:
       - run: chmod 600 "$HOME/.ssh/key"
       # Deploy
       - run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
+      - run: ssh -22 $HOME/.ssh/key deployer@${{ secrets.SSH_HOST }} && cd /home/vsau && mkdir testssss
