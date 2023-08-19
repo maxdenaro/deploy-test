@@ -9,17 +9,25 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Add SSH key
+      - name: Configure SSH
         run: |
-          mkdir "$HOME/.ssh"
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key"
-          chmod 600 "$HOME/.ssh/key"
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host qq
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: deployer
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: Update frontend
-        run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
+        run: ls
 
       - name: Deploy frontend
-        run: |
-          ssh -i $HOME/.ssh/key deployer@${{ secrets.SSH_HOST }} >> /dev/null
-          mkdir /home/deployer/vsau/asdad
-          exit
+        run: ssh qq 'cd /home/deployer/vsau && mkdir test' 
