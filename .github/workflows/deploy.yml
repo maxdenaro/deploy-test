@@ -10,22 +10,16 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Deploy frontend
-      # Add SSH key
+      - name: Add SSH key
       - run: mkdir "$HOME/.ssh"
       - run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key"
       - run: chmod 600 "$HOME/.ssh/key"
-      # Deploy
+
+      - name: Update frontend
+      - uses: actions/checkout@v2
       - run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
-    
-      - uses: appleboy/ssh-action@v1.0.0
-      - name: Build frontend
-      - with:
-          host: ${{ secrets.SSH_HOST }}
-          username: deployer
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd ~/vsau/frontend
-            ls
+
+      - name: Deploy frontend
+      - run: |
+          ssh -i $HOME/.ssh/key deployer@${{ secrets.SSH_HOST }} >> /dev/null
+          mkdir /home/deployer/asdad
