@@ -28,7 +28,7 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
       - run: |
           cd /home/runner
-          ls -al
+          ls -LR
       - name: Update frontend
         run: scp -i '~/.ssh/key' -o 'StrictHostKeyChecking no' ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
