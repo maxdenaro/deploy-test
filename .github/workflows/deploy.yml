@@ -1,10 +1,16 @@
 name: Deploy
 
 on:
-  pull_request:
+  # Tests + Deploy
+  push:
     branches:
       - main
       - develop
+
+  # Tests
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   deploy:
