@@ -28,7 +28,7 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: Update frontend
-        run: scp -i ~/.ssh/key -o 'StrictHostKeyChecking no' . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
+        run: rsync -e 'ssh qq' --archive --compress --delete . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
       - name: Deploy frontend
         run: ssh qq 'cd /home/deployer/vsau && mkdir test'
