@@ -16,9 +16,10 @@ jobs:
           chmod 600 "$HOME/.ssh/key"
 
       - name: Update frontend
-        run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
+        run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
       - name: Deploy frontend
         run: |
           ssh -i $HOME/.ssh/key deployer@${{ secrets.SSH_HOST }} >> /dev/null
           mkdir /home/deployer/vsau/asdad
+          exit
