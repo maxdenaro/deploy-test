@@ -7,7 +7,6 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Add SSH key
