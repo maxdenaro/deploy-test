@@ -10,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add SSH key
-      - run: mkdir "$HOME/.ssh"
-      - run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key"
-      - run: chmod 600 "$HOME/.ssh/key"
+        run: |
+          mkdir "$HOME/.ssh"
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key"
+          chmod 600 "$HOME/.ssh/key"
 
       - name: Update frontend
-      - uses: actions/checkout@v2
-      - run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
+        run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
       - name: Deploy frontend
-      - run: |
+        run: |
           ssh -i $HOME/.ssh/key deployer@${{ secrets.SSH_HOST }} >> /dev/null
-          mkdir /home/deployer/asdad
+          mkdir /home/deployer/vsau/asdad
