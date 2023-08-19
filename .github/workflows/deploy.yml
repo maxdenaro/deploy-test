@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,4 +17,19 @@ jobs:
       - run: chmod 600 "$HOME/.ssh/key"
       # Deploy
       - run: rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
-      - run: ssh -p 22 -i $HOME/.ssh/key deployer@${{ secrets.SSH_HOST }} && cd /home/vsau && mkdir testssss
+    
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build frontend
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: deployer
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          cd ~/vsau/frontend
+          docker
+          ls
