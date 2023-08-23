@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get frontend repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Node.js v20.x
         uses: actions/setup-node@v3
@@ -23,7 +23,6 @@ jobs:
       - name: Build frontend
         run: |
           cd ./app
-          npm install sharp
           npm install --save-dev typescript @types/node
           npm install
           npm run build
@@ -51,7 +50,7 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: Get frontend repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Update frontend
         run: rsync -e 'ssh -i ~/.ssh/key -o StrictHostKeyChecking=no' --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
