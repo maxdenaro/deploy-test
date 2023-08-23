@@ -24,9 +24,8 @@ jobs:
         run: |
           npm install sharp
           npm install --save-dev typescript @types/node
-          ls -LR
-          # npm install
-          # npm next build
+          npm install
+          npm next build
 
   deploy:
     name: 'Deploy'
