@@ -7,4 +7,5 @@ RUN npm install sharp && npm cache clean --force
 RUN npm install --save-dev typescript @types/node && npm cache clean --force
 RUN npm install && npm cache clean --force
 
+RUN npm run build
 CMD npm run start
