@@ -1,7 +1,7 @@
 name: CI/CD
 
 on:
-  # Tests + Deploy
+  # Build + Deploy
   push:
     branches:
       - master
@@ -23,6 +23,7 @@ jobs:
       - name: Build frontend
         run: |
           cd ./app
+          npm install sharp
           npm install --save-dev typescript @types/node
           npm install
           npm run build
