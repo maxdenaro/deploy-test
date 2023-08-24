@@ -4,34 +4,12 @@ on:
   # Build + Deploy
   push:
     branches:
-      - master
       - develop
 
 jobs:
-  build:
-    name: 'Build'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get frontend repo
-        uses: actions/checkout@v3
-
-      - name: Install Node.js v20.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
-
-      - name: Build frontend
-        run: |
-          cd ./app
-          npm install sharp
-          npm install --save-dev typescript @types/node
-          npm install
-          npm run build
-
   deploy:
-    name: 'Deploy'
+    name: 'Build and deploy'
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Configure SSH
         run: |
@@ -53,8 +31,21 @@ jobs:
       - name: Get frontend repo
         uses: actions/checkout@v3
 
+      - name: Install Node.js v20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+
+      - name: Build frontend
+        run: |
+          cd ./app
+          npm install sharp
+          npm install --save-dev typescript @types/node
+          npm install
+          npm run build
+
       - name: Update frontend
-        run: rsync -e 'ssh -i ~/.ssh/key -o StrictHostKeyChecking=no' --archive --compress --delete ./app deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
+        run: rsync -e 'ssh -i ~/.ssh/key -o StrictHostKeyChecking=no' --archive --compress --delete ./app/.next deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
       - name: Deploy frontend
-        run: ssh qq 'cd /home/deployer/vsau'
+        run: ssh qq 'cd /home/deployer/vsau/frontend'
