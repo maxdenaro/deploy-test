@@ -5,4 +5,4 @@ COPY . /opt/frontend
 
 RUN npm install sharp next && npm cache clean --force
 
-CMD npm next start
+CMD npm run start
