@@ -47,9 +47,8 @@ jobs:
       - name: Update frontend
         run: |
           cd ./app
-          mv Dockerfile ./.next
-          cd ./.next
+          rm -r ./node_modules
           rsync -e 'ssh -i ~/.ssh/key -o StrictHostKeyChecking=no' --archive --compress --delete . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
       - name: Deploy frontend
-        run: ssh qq 'cd /home/deployer/vsau'
+        run: ssh qq 'cd /home/deployer/vsau && docker-compose build && docker-compose up'
