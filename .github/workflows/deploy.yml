@@ -39,9 +39,9 @@ jobs:
       - name: Build frontend
         run: |
           cd ./app
-          npm install sharp
-          npm install --save-dev typescript @types/node
-          npm install
+          npm install sharp && npm cache clean --force
+          npm install --save-dev typescript @types/node && npm cache clean --force
+          npm install && npm cache clean --force
           npm run build
 
       - name: Update frontend
@@ -51,4 +51,4 @@ jobs:
           rsync -e 'ssh -i ~/.ssh/key -o StrictHostKeyChecking=no' --archive --compress --delete . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
       - name: Deploy frontend
-        run: ssh qq 'cd /home/deployer/vsau && docker-compose build && docker-compose up'
+        run: ssh qq 'cd /home/deployer/vsau && docker-compose build && docker-compose up -d'
