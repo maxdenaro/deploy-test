@@ -46,7 +46,9 @@ jobs:
 
       - name: Update frontend
         run: |
-          cd ./app/.next
+          cd ./app
+          mv Dockerfile ./.next
+          cd ./.next
           rsync -e 'ssh -i ~/.ssh/key -o StrictHostKeyChecking=no' --archive --compress --delete . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
       - name: Deploy frontend
