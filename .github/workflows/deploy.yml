@@ -43,12 +43,11 @@ jobs:
           npm install --save-dev typescript @types/node && npm cache clean --force
           npm install && npm cache clean --force
           npm run build
+          rm -r ./node_modules
 
       - name: Update frontend
         run: |
           cd ./app
-          mv Dockerfile ./.next
-          cd ./.next
           rsync -e 'ssh -i ~/.ssh/key -o StrictHostKeyChecking=no' --archive --compress --delete . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
 
       - name: Deploy frontend
