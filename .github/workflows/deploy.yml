@@ -11,44 +11,11 @@ jobs:
     name: 'Build and deploy'
     runs-on: ubuntu-latest
     steps:
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/key
-          chmod 600 ~/.ssh/key
-          cat >>~/.ssh/config <<END
-          Host qq
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/key
-            StrictHostKeyChecking no
-          END
-        env:
-          SSH_USER: deployer
-          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-
-      - name: Get frontend repo
+      - name: Get repo
         uses: actions/checkout@v3
 
-      - name: Install Node.js v20.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
-
-      - name: Build frontend
+      - name: Push to registry
         run: |
-          cd ./app
-          npm install sharp && npm cache clean --force
-          npm install --save-dev typescript @types/node && npm cache clean --force
-          npm install && npm cache clean --force
-          npm run build
-          rm -r ./node_modules
-
-      - name: Update frontend
-        run: |
-          cd ./app
-          rsync -e 'ssh -i ~/.ssh/key -o StrictHostKeyChecking=no' --archive --compress --delete . deployer@${{ secrets.SSH_HOST }}:/home/deployer/vsau/frontend/
-
-      - name: Deploy frontend
-        run: ssh qq 'cd /home/deployer/vsau && docker-compose build && docker-compose up -d'
+          export CR_PAT=${{ secrets.GITHUB_TOKEN }}
+          echo $CR_PAT | docker login ghcr.io -u Osbornnnnn --password-stdin
+          docker push ghcr.io/Osbornnnnn/frontend:latest
